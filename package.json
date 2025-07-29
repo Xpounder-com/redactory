@@ -13,5 +13,9 @@
   },
   "bin": {
     "redactory": "./bin/redactory.js"
+  },
+  "types": "dist/index.d.ts",
+  "devDependencies": {
+    "typescript": "^5.4.5"
   }
 }
