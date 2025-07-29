@@ -1,0 +1,18 @@
+version: 1
+entityTypes:
+  - EMAIL
+  - PHONE
+  - SSN
+  - ICD10
+actions:
+  EMAIL: MASK
+  PHONE: MASK
+  SSN: REDACT
+  ICD10: ALLOW
+thresholds:
+  default: 0.7
+  SSN: 0.9
+mask:
+  char: "*"
+  keepLast: 4
+fallback: BLOCK

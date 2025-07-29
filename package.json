@@ -1,0 +1,17 @@
+{
+  "name": "redactory",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "exports": {
+    "./package.json": "./package.json",
+    "./dist/index.js": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test"
+  },
+  "bin": {
+    "redactory": "./bin/redactory.js"
+  }
+}
