@@ -1,4 +1,5 @@
 import { readFileSync } from 'fs';
+import yaml from 'yaml';
 
 export interface Policy {
   version: number;
@@ -15,39 +16,11 @@ export interface Policy {
   fallback: 'BLOCK' | 'ALLOW' | 'MASK' | 'REDACT';
 }
 
-function parseYaml(text: string): any {
-  const obj: any = {};
-  const lines = text.split(/\r?\n/);
-  let currentKey: string | null = null;
-  for (const line of lines) {
-    if (/^\s*$/.test(line)) continue;
-    const m = /^([^:]+):\s*(.*)$/.exec(line);
-    if (m) {
-      const key = m[1].trim();
-      const value = m[2].trim();
-      if (value === '') {
-        currentKey = key;
-        obj[key] = [];
-      } else if (value.startsWith('[')) {
-        obj[key] = JSON.parse(value);
-      } else if (/^(true|false|\d+)$/.test(value)) {
-        obj[key] = JSON.parse(value);
-      } else {
-        obj[key] = value;
-      }
-      continue;
-    }
-    const arr = /^\s+-\s*(.*)$/.exec(line);
-    if (arr && currentKey) {
-      obj[currentKey].push(arr[1].trim());
-    }
-  }
-  return obj;
-}
+// Use the widely adopted `yaml` package for parsing policy files
 
 export function loadPolicy(file: string): Policy {
   const text = readFileSync(file, 'utf8');
-  const data = file.endsWith('.json') ? JSON.parse(text) : parseYaml(text);
+  const data = file.endsWith('.json') ? JSON.parse(text) : yaml.parse(text);
   return data as Policy;
 }
 
