@@ -26,3 +26,12 @@ const scrubber = new Scrubber(policy);
 const { result } = scrubber.scrub('Contact me at john@example.com');
 console.log(result);
 ```
+
+## Synthetic Test Data
+
+A sample file containing fabricated sensitive data is available at `synthetic-data/sample.txt` for quick testing.
+Run the CLI to scrub the file:
+
+```bash
+npx redactory scrub synthetic-data/sample.txt
+```
