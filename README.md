@@ -35,3 +35,32 @@ Run the CLI to scrub the file:
 ```bash
 npx redactory scrub synthetic-data/sample.txt
 ```
+
+## Development
+
+Build the project to compile the TypeScript source into the `dist` folder:
+
+```bash
+npm run build
+```
+
+Run the test suite using Node's test runner:
+
+```bash
+npm test
+```
+
+## CLI Usage
+
+After building you can run the command line interface with `npx`:
+
+```bash
+npx redactory <command> [args]
+```
+
+Commands include:
+
+- `scrub <file>` – redact a file in place
+- `preview <file>` – show a diff of the proposed changes
+- `ingest <dir>` – scrub all supported files within a directory
+- `policy validate <file>` – verify a policy file is valid
