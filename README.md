@@ -1,22 +1,71 @@
-# redactory
+# Redactory
 
-A privacy-first Node.js package that detects and masks sensitive information such as emails, phone numbers and SSNs. All processing happens locally with no network access.
+[![npm version](https://img.shields.io/npm/v/redactory.svg)](https://www.npmjs.com/package/redactory)
+[![Apache-2.0 License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+
+**Redactory** is a privacy‑first utility for detecting and removing personally identifiable information (PII) from text files. It transforms documentation into AI-ready web content without exposing PII or export-controlled data. All processing happens on your machine unless you set the `AZURE_BLOB_SAS_URL` environment variable, in which case scrubbed files are uploaded to Azure Blob Storage.
 
 ## Features
 
-- Detects EMAIL, PHONE, SSN and ICD10 codes using regular expressions
-- Policy driven actions (MASK, REDACT, ALLOW)
-- Streaming transform for large data
-- CLI commands: `scrub`, `preview`, `ingest`, `policy validate`
+- Detects common PII types (EMAIL, PHONE, SSN and ICD10 codes) using regular expressions
+- Policy‑driven actions to `MASK`, `REDACT` or `ALLOW` detected entities
+- Streaming transform for processing large files
+- Command line interface with `scrub`, `preview`, `ingest` and `policy validate`
 - Optional upload of scrubbed files to Azure Blob Storage
+- Converts documentation into AI-ready web content without exposing PII or export-controlled data
 
 ## Installation
 
-```
+```bash
 npm install redactory
 ```
 
-## Usage
+## Quick Start
+
+Create a policy file describing which entity types to detect and how they should be handled. An example policy is included in this repository:
+
+```yaml
+version: 1
+entityTypes:
+  - EMAIL
+  - PHONE
+  - SSN
+  - ICD10
+actions:
+  EMAIL: MASK
+  PHONE: MASK
+  SSN: REDACT
+  ICD10: ALLOW
+thresholds:
+  default: 0.7
+  SSN: 0.9
+mask:
+  char: "*"
+  keepLast: 4
+fallback: BLOCK
+```
+
+### CLI usage
+
+Build the project and run the CLI with `npx`:
+
+```bash
+npm run build
+npx redactory scrub synthetic-data/sample.txt
+```
+
+Available commands:
+
+- `scrub <file>` – redact a file in place
+- `preview <file>` – show a diff of changes without modifying the file
+- `ingest <dir>` – scrub all `.txt`, `.html` and `.json` files in a directory
+- `policy validate <file>` – verify a policy file is valid
+
+If the `AZURE_BLOB_SAS_URL` environment variable is set, scrubbed files will automatically be uploaded to Azure Blob Storage and the resulting blob URL will be printed.
+
+### Programmatic API
+
+You can also use Redactory from your own Node.js code:
 
 ```javascript
 import { Scrubber, loadPolicy } from 'redactory';
@@ -24,51 +73,28 @@ import { Scrubber, loadPolicy } from 'redactory';
 const policy = loadPolicy('policy.yaml');
 const scrubber = new Scrubber(policy);
 
-const { result } = scrubber.scrub('Contact me at john@example.com');
+const { result } = scrubber.scrub('Contact me at jane@example.com');
 console.log(result);
 ```
 
-## Synthetic Test Data
+### Synthetic Test Data
 
-A sample file containing fabricated sensitive data is available at `synthetic-data/sample.txt` for quick testing.
-Run the CLI to scrub the file:
-
-```bash
-npx redactory scrub synthetic-data/sample.txt
-```
+A sample file containing fabricated sensitive data lives in `synthetic-data/sample.txt`. Try scrubbing it with the CLI to see the output.
 
 ## Development
 
-Build the project to compile the TypeScript source into the `dist` folder:
+Compile the TypeScript sources and run the test suite:
 
 ```bash
 npm run build
-```
-
-Run the test suite using Node's test runner:
-
-```bash
 npm test
 ```
 
-## CLI Usage
+## License
 
-After building you can run the command line interface with `npx`:
+This project is licensed under the Apache 2.0 License. See the [LICENSE](LICENSE) file for details.
 
-```bash
-npx redactory <command> [args]
-```
+## Contributing
 
-Commands include:
+We welcome community contributions! Feel free to open an issue or submit a pull request on GitHub if you discover problems or have improvements to share.
 
-- `scrub <file>` – redact a file in place
-- `preview <file>` – show a diff of the proposed changes
-- `ingest <dir>` – scrub all supported files within a directory
-- `policy validate <file>` – verify a policy file is valid
-
-### Azure Upload
-
-If the environment variable `AZURE_BLOB_SAS_URL` is set, scrubbed files will be
-uploaded to Azure Blob Storage using that SAS URL and the resulting signed blob
-URL will be printed. This value is typically provided via your Key Vault in
-production.
