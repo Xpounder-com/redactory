@@ -8,6 +8,7 @@ A privacy-first Node.js package that detects and masks sensitive information suc
 - Policy driven actions (MASK, REDACT, ALLOW)
 - Streaming transform for large data
 - CLI commands: `scrub`, `preview`, `ingest`, `policy validate`
+- Optional upload of scrubbed files to Azure Blob Storage
 
 ## Installation
 
@@ -64,3 +65,10 @@ Commands include:
 - `preview <file>` – show a diff of the proposed changes
 - `ingest <dir>` – scrub all supported files within a directory
 - `policy validate <file>` – verify a policy file is valid
+
+### Azure Upload
+
+If the environment variable `AZURE_BLOB_SAS_URL` is set, scrubbed files will be
+uploaded to Azure Blob Storage using that SAS URL and the resulting signed blob
+URL will be printed. This value is typically provided via your Key Vault in
+production.

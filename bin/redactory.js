@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { readFileSync, writeFileSync, readdirSync, statSync } from 'fs';
 import { join, extname } from 'path';
-import { Scrubber, loadPolicy, validatePolicy } from '../dist/index.js';
+import { Scrubber, loadPolicy, validatePolicy, uploadToAzure } from '../dist/index.js';
 
 function printHelp() {
   console.log('Usage: redactory <command> [args]');
@@ -29,6 +29,14 @@ async function main() {
     const txt = readFileSync(arg1, 'utf8');
     const { result } = scrubber.scrub(txt);
     writeFileSync(arg1, result);
+    if (process.env.AZURE_BLOB_SAS_URL) {
+      try {
+        const url = await uploadToAzure(arg1);
+        console.log('Uploaded to', url);
+      } catch (err) {
+        console.error('Upload failed:', err.message);
+      }
+    }
     return;
   }
   if (cmd === 'preview' && arg1) {
@@ -45,6 +53,14 @@ async function main() {
         const txt = readFileSync(p, 'utf8');
         const { result } = scrubber.scrub(txt);
         writeFileSync(p, result);
+        if (process.env.AZURE_BLOB_SAS_URL) {
+          try {
+            const url = await uploadToAzure(p);
+            console.log('Uploaded', f, 'to', url);
+          } catch (err) {
+            console.error('Upload failed for', f + ':', err.message);
+          }
+        }
       }
     }
     return;
