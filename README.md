@@ -77,6 +77,26 @@ const { result } = scrubber.scrub('Contact me at jane@example.com');
 console.log(result);
 ```
 
+### Streaming API
+
+Redactory can scrub data from Node.js streams using the `scrubStream` helper:
+
+```javascript
+import { Scrubber, loadPolicy, scrubStream } from 'redactory';
+import { Readable } from 'stream';
+
+const policy = loadPolicy('policy.yaml');
+const scrubber = new Scrubber(policy);
+const input = Readable.from(['Contact me at jane@example.com']);
+
+// pipe the redacted output elsewhere
+const redacted = scrubStream(input, scrubber);
+redacted.on('data', chunk => process.stdout.write(chunk));
+```
+
+This makes it easy to pipe the redacted output into other streams such as file
+writes or network uploads.
+
 ### Synthetic Test Data
 
 A sample file containing fabricated sensitive data lives in `synthetic-data/sample.txt`. Try scrubbing it with the CLI to see the output.
