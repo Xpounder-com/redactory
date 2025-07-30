@@ -9,6 +9,8 @@
   },
   "scripts": {
     "build": "tsc",
+    "lint": "tsc --noEmit",
+    "pretest": "npm run build && npm run lint",
     "test": "node --test"
   },
   "dependencies": {},
