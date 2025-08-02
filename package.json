@@ -11,7 +11,8 @@
     "build": "tsc",
     "lint": "tsc --noEmit",
     "pretest": "npm run build && npm run lint",
-    "test": "node --test"
+    "test": "node --test",
+    "install:onnx": "./install-onnx.sh"
   },
   "dependencies": {
     "onnxruntime-node": "^1.18.0"
