@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/redactory.svg)](https://www.npmjs.com/package/redactory)
 [![Apache-2.0 License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 
-**Redactory** is a privacy‑first utility for detecting and removing personally identifiable information (PII) from text files. It transforms documentation into AI-ready web content without exposing PII or export-controlled data. All processing happens on your machine unless you set the `AZURE_BLOB_SAS_URL` environment variable, in which case scrubbed files are uploaded to Azure Blob Storage.
+**Redactory** is a privacy‑first utility for detecting and removing personally identifiable information (PII) from text files. It transforms documentation into AI-ready web content without exposing PII or export-controlled data. All processing happens on your machine unless you set the `AZURE_BLOB_SAS_URL` or `STORAGE_PRIMARY_CONNECTION_STRING` environment variables, in which case scrubbed files are uploaded to Azure Blob Storage.
 
 ## Features
 
@@ -61,7 +61,16 @@ Available commands:
 - `ingest <dir>` – scrub all `.txt`, `.html` and `.json` files in a directory
 - `policy validate <file>` – verify a policy file is valid
 
-If the `AZURE_BLOB_SAS_URL` environment variable is set, scrubbed files will automatically be uploaded to Azure Blob Storage and the resulting blob URL will be printed.
+If either `AZURE_BLOB_SAS_URL` or `STORAGE_PRIMARY_CONNECTION_STRING` is set, scrubbed files will automatically be uploaded to Azure Blob Storage and the resulting blob URL will be printed. When using a connection string, set `AZURE_BLOB_CONTAINER_NAME` to control the target container (defaults to `redactory`).
+
+Example using a connection string:
+
+```bash
+export STORAGE_PRIMARY_CONNECTION_STRING="DefaultEndpointsProtocol=https;AccountName=...;AccountKey=..."
+export AZURE_BLOB_CONTAINER_NAME="my-container"  # optional
+```
+
+This mode relies on the `@azure/storage-blob` package, which is loaded on demand.
 
 ### Programmatic API
 

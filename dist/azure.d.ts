@@ -1,8 +1,12 @@
 /**
- * Upload a file to Azure Blob Storage using a pre-generated container SAS URL.
+ * Upload a file to Azure Blob Storage.
  *
- * Required environment variable:
+ * Required environment variables (one of):
  *   AZURE_BLOB_SAS_URL - container URL including SAS token
+ *   STORAGE_PRIMARY_CONNECTION_STRING - account connection string
+ *
+ * Optional when using connection string:
+ *   AZURE_BLOB_CONTAINER_NAME - container to upload to (defaults to "redactory")
  *
  * The returned value is the signed URL of the uploaded blob.
  */

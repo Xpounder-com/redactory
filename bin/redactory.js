@@ -29,7 +29,10 @@ async function main() {
     const txt = readFileSync(arg1, 'utf8');
     const { result } = scrubber.scrub(txt);
     writeFileSync(arg1, result);
-    if (process.env.AZURE_BLOB_SAS_URL) {
+    if (
+      process.env.AZURE_BLOB_SAS_URL ||
+      process.env.STORAGE_PRIMARY_CONNECTION_STRING
+    ) {
       try {
         const url = await uploadToAzure(arg1);
         console.log('Uploaded to', url);
@@ -53,7 +56,10 @@ async function main() {
         const txt = readFileSync(p, 'utf8');
         const { result } = scrubber.scrub(txt);
         writeFileSync(p, result);
-        if (process.env.AZURE_BLOB_SAS_URL) {
+        if (
+          process.env.AZURE_BLOB_SAS_URL ||
+          process.env.STORAGE_PRIMARY_CONNECTION_STRING
+        ) {
           try {
             const url = await uploadToAzure(p);
             console.log('Uploaded', f, 'to', url);
