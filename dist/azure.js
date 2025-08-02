@@ -41,3 +41,28 @@ export async function uploadToAzure(filePath) {
     });
     return blobUrl;
 }
+/**
+ * Upload content to Azure Blob Storage using an account access key and return a
+ * time limited SAS URL (24 hours) for the uploaded blob.
+ */
+export async function uploadWithAccessKey(accountName, accountKey, containerName, blobName, content) {
+    const { BlobServiceClient, StorageSharedKeyCredential, generateBlobSASQueryParameters, BlobSASPermissions } = await import('@azure/storage-blob');
+    const credential = new StorageSharedKeyCredential(accountName, accountKey);
+    const service = new BlobServiceClient(`https://${accountName}.blob.core.windows.net`, credential);
+    const container = service.getContainerClient(containerName);
+    if (!(await container.exists())) {
+        await container.create();
+    }
+    const block = container.getBlockBlobClient(blobName);
+    const data = typeof content === 'string' ? Buffer.from(content) : content;
+    await block.uploadData(data);
+    const expiresOn = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    const sas = generateBlobSASQueryParameters({
+        containerName,
+        blobName,
+        permissions: BlobSASPermissions.parse('r'),
+        startsOn: new Date(),
+        expiresOn
+    }, credential).toString();
+    return `${block.url}?${sas}`;
+}
