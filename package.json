@@ -12,16 +12,16 @@
     "lint": "tsc --noEmit",
     "pretest": "npm run build && npm run lint",
     "test": "node --test",
-    "install:onnx": "./install-onnx.sh",
-    "postinstall": "npm run install:onnx"
+    "install:onnx": "./install-onnx.sh"
   },
-  "dependencies": {},
+  "dependencies": {
+    "typescript": "^5.4.5"
+  },
   "bin": {
     "redactory": "./bin/redactory.js"
   },
   "types": "dist/index.d.ts",
   "devDependencies": {
-    "typescript": "^5.4.5",
     "@types/node": "^20.11.30"
   }
 }
