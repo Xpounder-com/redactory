@@ -80,9 +80,10 @@ console.log(result);
 ### Using an ONNX NER model
 
 Redactory can optionally load an [ONNX](https://onnx.ai/) model to detect entities
-using machine learning. After installing `onnxruntime-node` and obtaining a
-vocabulary mapping of tokens to IDs, provide the model path and vocabulary when
-constructing the `Scrubber`:
+using machine learning. A CPU build of `onnxruntime-node` is installed automatically
+during `npm install`. To use the GPU build set the environment variable
+`ONNXRUNTIME_GPU=1` before installing. After obtaining a vocabulary mapping of tokens
+to IDs, provide the model path and vocabulary when constructing the `Scrubber`:
 
 ```javascript
 import fs from 'fs';

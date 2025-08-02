@@ -7,4 +7,5 @@ else
   export npm_config_onnxruntime_build=cpu
 fi
 
-npm install onnxruntime-node
+# Install without modifying package.json so the CPU build is used by default.
+npm install onnxruntime-node --no-save

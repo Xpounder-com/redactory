@@ -12,11 +12,10 @@
     "lint": "tsc --noEmit",
     "pretest": "npm run build && npm run lint",
     "test": "node --test",
-    "install:onnx": "./install-onnx.sh"
+    "install:onnx": "./install-onnx.sh",
+    "postinstall": "npm run install:onnx"
   },
-  "dependencies": {
-    "onnxruntime-node": "^1.18.0"
-  },
+  "dependencies": {},
   "bin": {
     "redactory": "./bin/redactory.js"
   },
