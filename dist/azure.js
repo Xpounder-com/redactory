@@ -15,7 +15,13 @@ export async function uploadToAzure(filePath) {
         throw new Error('AZURE_BLOB_SAS_URL is not defined');
     }
     const blobName = basename(filePath);
-    const url = new URL(containerUrl);
+    let url;
+    try {
+        url = new URL(containerUrl);
+    }
+    catch {
+        throw new Error('AZURE_BLOB_SAS_URL must be a valid container SAS URL');
+    }
     url.pathname = `${url.pathname.replace(/\/$/, '')}/${blobName}`;
     const blobUrl = url.toString();
     const stats = statSync(filePath);
