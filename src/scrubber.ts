@@ -1,5 +1,5 @@
 import { Policy, loadPolicy } from './policy.js';
-import { Entity, detect } from './detectors.js';
+import { Entity, detect, DetectorConfig, configureDetectors } from './detectors.js';
 import { mask, replaceRange } from './utils.js';
 
 export interface ScrubOptions {
@@ -15,14 +15,17 @@ export interface ScrubResult {
 
 export class Scrubber {
   private policy: Policy;
+  private detectorConfig: DetectorConfig;
 
-  constructor(policy: Policy) {
+  constructor(policy: Policy, detectorConfig: DetectorConfig = {}) {
     this.policy = policy;
+    this.detectorConfig = detectorConfig;
+    configureDetectors(detectorConfig);
   }
 
-  static fromFile(path: string): Scrubber {
+  static fromFile(path: string, detectorConfig: DetectorConfig = {}): Scrubber {
     const p = loadPolicy(path);
-    return new Scrubber(p);
+    return new Scrubber(p, detectorConfig);
   }
 
   updatePolicy(policy: Policy): void {

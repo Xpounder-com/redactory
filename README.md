@@ -77,6 +77,28 @@ const { result } = scrubber.scrub('Contact me at jane@example.com');
 console.log(result);
 ```
 
+### Using an ONNX NER model
+
+Redactory can optionally load an [ONNX](https://onnx.ai/) model to detect entities
+using machine learning. After installing `onnxruntime-node` and obtaining a
+vocabulary mapping of tokens to IDs, provide the model path and vocabulary when
+constructing the `Scrubber`:
+
+```javascript
+import fs from 'fs';
+import { Scrubber, loadPolicy } from 'redactory';
+
+const policy = loadPolicy('policy.yaml');
+const vocab = JSON.parse(fs.readFileSync('vocab.json', 'utf8'));
+
+const scrubber = new Scrubber(policy, {
+  ner: { modelPath: 'ner-model.onnx', vocab }
+});
+
+const { result, entities } = scrubber.scrub('Alice met Bob.');
+console.log(result, entities);
+```
+
 ### Streaming API
 
 Redactory can scrub data from Node.js streams using the `scrubStream` helper:

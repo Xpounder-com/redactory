@@ -1,14 +1,17 @@
 import { loadPolicy } from './policy.js';
-import { detect } from './detectors.js';
+import { detect, configureDetectors } from './detectors.js';
 import { mask, replaceRange } from './utils.js';
 export class Scrubber {
     policy;
-    constructor(policy) {
+    detectorConfig;
+    constructor(policy, detectorConfig = {}) {
         this.policy = policy;
+        this.detectorConfig = detectorConfig;
+        configureDetectors(detectorConfig);
     }
-    static fromFile(path) {
+    static fromFile(path, detectorConfig = {}) {
         const p = loadPolicy(path);
-        return new Scrubber(p);
+        return new Scrubber(p, detectorConfig);
     }
     updatePolicy(policy) {
         this.policy = policy;

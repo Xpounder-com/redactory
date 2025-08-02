@@ -13,7 +13,9 @@
     "pretest": "npm run build && npm run lint",
     "test": "node --test"
   },
-  "dependencies": {},
+  "dependencies": {
+    "onnxruntime-node": "^1.18.0"
+  },
   "bin": {
     "redactory": "./bin/redactory.js"
   },

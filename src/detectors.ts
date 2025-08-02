@@ -7,6 +7,24 @@ export interface Entity {
   ruleId: string;
 }
 
+export interface DetectorConfig {
+  ner?: {
+    modelPath: string;
+    vocab: Record<string, number>;
+  };
+}
+
+import { detectNER, init as initNER } from './ner.js';
+
+let nerEnabled = false;
+
+export function configureDetectors(config: DetectorConfig): void {
+  if (config.ner) {
+    initNER(config.ner);
+    nerEnabled = true;
+  }
+}
+
 interface Pattern {
   type: string;
   regex: RegExp;
@@ -36,6 +54,9 @@ export function detect(text: string): Entity[] {
         ruleId: p.ruleId
       });
     }
+  }
+  if (nerEnabled) {
+    entities.push(...detectNER(text));
   }
   return entities.sort((a, b) => a.start - b.start);
 }

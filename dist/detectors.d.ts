@@ -6,4 +6,11 @@ export interface Entity {
     score: number;
     ruleId: string;
 }
+export interface DetectorConfig {
+    ner?: {
+        modelPath: string;
+        vocab: Record<string, number>;
+    };
+}
+export declare function configureDetectors(config: DetectorConfig): void;
 export declare function detect(text: string): Entity[];

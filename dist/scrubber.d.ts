@@ -1,5 +1,5 @@
 import { Policy } from './policy.js';
-import { Entity } from './detectors.js';
+import { Entity, DetectorConfig } from './detectors.js';
 export interface ScrubOptions {
     preview?: boolean;
     explain?: boolean;
@@ -11,8 +11,9 @@ export interface ScrubResult {
 }
 export declare class Scrubber {
     private policy;
-    constructor(policy: Policy);
-    static fromFile(path: string): Scrubber;
+    private detectorConfig;
+    constructor(policy: Policy, detectorConfig?: DetectorConfig);
+    static fromFile(path: string, detectorConfig?: DetectorConfig): Scrubber;
     updatePolicy(policy: Policy): void;
     scrub(text: string, options?: ScrubOptions): ScrubResult;
     private inlineDiff;

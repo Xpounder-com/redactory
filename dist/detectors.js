@@ -1,3 +1,11 @@
+import { detectNER, init as initNER } from './ner.js';
+let nerEnabled = false;
+export function configureDetectors(config) {
+    if (config.ner) {
+        initNER(config.ner);
+        nerEnabled = true;
+    }
+}
 const patterns = [
     { type: 'EMAIL', regex: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}/g, score: 1, ruleId: 'regex-email' },
     { type: 'PHONE', regex: /\b\d{3}[ -]?\d{3}[ -]?\d{4}\b/g, score: 0.9, ruleId: 'regex-phone' },
@@ -19,6 +27,9 @@ export function detect(text) {
                 ruleId: p.ruleId
             });
         }
+    }
+    if (nerEnabled) {
+        entities.push(...detectNER(text));
     }
     return entities.sort((a, b) => a.start - b.start);
 }
